@@ -1,0 +1,5 @@
+# Catálogo de imágenes que ya vienen en el proyecto (carpeta src/main/webapp/media).
+# Formato: codigo;titulo;categoria;apetito;pesoKg;descripcion;archivo;autor
+B001;Gloria;Ganado;7;450.5;Tranquila y dormilona: la reina de la manada;gloria.jpeg;Ver créditos en el README
+B002;Lola;Ganado;9;520.0;Come primero y pregunta después;lola.jpg;Ver créditos en el README
+B003;Toby;Ganado;5;180.0;El más joven: todavía está creciendo;toby.jpeg;Ver créditos en el README
