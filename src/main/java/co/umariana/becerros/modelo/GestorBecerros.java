@@ -1,91 +1,199 @@
 package co.umariana.becerros.modelo;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import co.umariana.becerros.estructura.Lista;
 import co.umariana.becerros.persistencia.Repositorio;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Reglas de negocio del Becerrario (tarea de MODELO).
- *
- * <p>Guarda los becerros en una {@link Lista} (la estructura de datos del equipo) y, después de
- * cada cambio, los guarda con el {@link Repositorio}. No debe usar {@code ArrayList} ni otra
- * colección de Java para guardar los datos: eso lo hace la {@code Lista}.
- */
 public class GestorBecerros implements ServicioBecerros {
 
     private final Lista<Becerro> lista;
     private final Repositorio repositorio;
 
-    /**
-     * Al crearse, carga con el repositorio los becerros ya guardados y los agrega a la lista.
-     * Si el repositorio lanza {@link java.io.IOException}, se relanza como {@link java.io.UncheckedIOException}.
-     */
+    // Constructor
     public GestorBecerros(Lista<Becerro> lista, Repositorio repositorio) {
         this.lista = lista;
         this.repositorio = repositorio;
-        // TODO (MODELO): cargar los becerros del repositorio y agregarlos a la lista.
+
+        try {
+            List<Becerro> guardados = repositorio.cargar();
+
+            for (Becerro becerro : guardados) {
+                lista.agregar(becerro);
+            }
+
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
+    // Método auxiliar para guardar los cambios
+    private void guardar() {
+        try {
+            repositorio.guardar(listar());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    // Agregar un becerro
     @Override
     public void agregar(Becerro becerro) {
-        // TODO (MODELO): validar (becerro.validar()), rechazar código repetido
-        //  (IllegalArgumentException), agregar al final de la lista y guardar con el repositorio.
-        throw new UnsupportedOperationException("TODO: agregar()");
+
+        if (becerro == null) {
+            throw new IllegalArgumentException("El becerro no puede ser nulo");
+        }
+
+        becerro.validar();
+
+        if (buscar(becerro.getCodigo()) != null) {
+            throw new IllegalArgumentException("Ya existe un becerro con ese código");
+        }
+
+        lista.agregar(becerro);
+
+        guardar();
     }
 
+    // Buscar un becerro por su código
     @Override
     public Becerro buscar(String codigo) {
-        // TODO (MODELO)
-        throw new UnsupportedOperationException("TODO: buscar()");
+
+        if (codigo == null) {
+            return null;
+        }
+
+        for (Becerro becerro : lista) {
+            if (becerro.getCodigo().equals(codigo)) {
+                return becerro;
+            }
+        }
+
+        return null;
     }
 
+    // Eliminar un becerro
     @Override
     public boolean eliminar(String codigo) {
-        // TODO (MODELO): si existe, eliminarlo de la lista, guardar y devolver true.
-        throw new UnsupportedOperationException("TODO: eliminar()");
+
+        for (int i = 0; i < lista.tamano(); i++) {
+
+            if (lista.obtener(i).getCodigo().equals(codigo)) {
+
+                lista.eliminar(i);
+
+                guardar();
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
+    // Listar todos los becerros
     @Override
     public List<Becerro> listar() {
-        // TODO (MODELO): devolver los becerros en el orden de la lista.
-        throw new UnsupportedOperationException("TODO: listar()");
+
+        List<Becerro> resultado = new ArrayList<>();
+
+        for (Becerro becerro : lista) {
+            resultado.add(becerro);
+        }
+
+        return resultado;
     }
 
+    // Ranking de mayor a menor apetito
     @Override
     public List<Becerro> ranking() {
-        // TODO (MODELO)
-        throw new UnsupportedOperationException("TODO: ranking()");
+
+        List<Becerro> resultado = listar();
+
+        resultado.sort(
+            Comparator.comparingInt(Becerro::getApetito)
+                .reversed()
+                .thenComparing(Becerro::getCodigo)
+        );
+
+        return resultado;
     }
 
+    // Promedio de apetito por categoría
     @Override
     public Map<String, Double> promedioPorCategoria() {
-        // TODO (MODELO)
-        throw new UnsupportedOperationException("TODO: promedioPorCategoria()");
+
+        Map<String, Double> sumas = new TreeMap<>();
+        Map<String, Integer> cantidades = new TreeMap<>();
+
+        for (Becerro becerro : lista) {
+
+            String categoria = becerro.getCategoria();
+
+            sumas.put(
+                categoria,
+                sumas.getOrDefault(categoria, 0.0) + becerro.getApetito()
+            );
+
+            cantidades.put(
+                categoria,
+                cantidades.getOrDefault(categoria, 0) + 1
+            );
+        }
+
+        Map<String, Double> promedios = new TreeMap<>();
+
+        for (String categoria : sumas.keySet()) {
+
+            double promedio = sumas.get(categoria) / cantidades.get(categoria);
+
+            promedios.put(categoria, promedio);
+        }
+
+        return promedios;
     }
 
+    // Cantidad total de becerros
     @Override
     public int total() {
-        // TODO (MODELO)
-        throw new UnsupportedOperationException("TODO: total()");
+        return lista.tamano();
     }
 
+    // Obtener el becerro actual del cursor
     @Override
     public Becerro actual() {
-        // TODO (MODELO): usar el cursor de la lista.
-        throw new UnsupportedOperationException("TODO: actual()");
+        return lista.actual();
     }
 
+    // Avanzar al siguiente becerro
     @Override
     public Becerro siguiente() {
-        // TODO (MODELO)
-        throw new UnsupportedOperationException("TODO: siguiente()");
+
+        if (lista.estaVacia()) {
+            return null;
+        }
+
+        lista.avanzar();
+
+        return lista.actual();
     }
 
+    // Retroceder al becerro anterior
     @Override
     public Becerro anterior() {
-        // TODO (MODELO)
-        throw new UnsupportedOperationException("TODO: anterior()");
+
+        if (lista.estaVacia()) {
+            return null;
+        }
+
+        lista.retroceder();
+
+        return lista.actual();
     }
 }

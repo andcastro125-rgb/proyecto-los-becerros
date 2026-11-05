@@ -40,8 +40,47 @@ public class Becerro {
      * </ul>
      */
     public void validar() {
-        // TODO (MODELO): implementar las reglas descritas arriba.
-        throw new UnsupportedOperationException("TODO: validar()");
+
+    // Validar que los textos obligatorios no sean nulos ni estén vacíos
+    if (codigo == null || codigo.isBlank()) {
+        throw new IllegalArgumentException("El código no puede estar vacío");
+    }
+
+    if (titulo == null || titulo.isBlank()) {
+        throw new IllegalArgumentException("El título no puede estar vacío");
+    }
+
+    if (categoria == null || categoria.isBlank()) {
+        throw new IllegalArgumentException("La categoría no puede estar vacía");
+    }
+
+    if (archivo == null || archivo.isBlank()) {
+        throw new IllegalArgumentException("El archivo no puede estar vacío");
+    }
+
+    // Validar el apetito
+    if (apetito < 1 || apetito > 10) {
+        throw new IllegalArgumentException("El apetito debe estar entre 1 y 10");
+    }
+
+    // Validar el peso
+    if (pesoKg <= 0) {
+        throw new IllegalArgumentException("El peso debe ser mayor que cero");
+    }
+
+    // La descripción puede estar vacía, pero no ser nula
+    if (descripcion == null) {
+        throw new IllegalArgumentException("La descripción no puede ser nula");
+    }
+
+    // Validar que ningún texto contenga punto y coma ni saltos de línea
+    String[] textos = {codigo, titulo, categoria, descripcion, archivo};
+
+    for (String texto : textos) {
+        if (texto != null && (texto.contains(";") || texto.contains("\n") || texto.contains("\r"))) {
+            throw new IllegalArgumentException("Los textos no pueden contener ; ni saltos de línea");
+        }
+    }
     }
 
     public String getCodigo() { return codigo; }
