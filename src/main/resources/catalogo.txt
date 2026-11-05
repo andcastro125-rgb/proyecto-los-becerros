@@ -3,3 +3,6 @@
 B001;Gloria;Ganado;7;450.5;Tranquila y dormilona: la reina de la manada;gloria.jpeg;Ver créditos en el README
 B002;Lola;Ganado;9;520.0;Come primero y pregunta después;lola.jpg;Ver créditos en el README
 B003;Toby;Ganado;5;180.0;El más joven: todavía está creciendo;toby.jpeg;Ver créditos en el README
+B004;Mateo;Ganado;8;215.0;Curioso y sociable: siempre encuentra compañía en el potrero;mateo.jpg;Andy Kennedy · Unsplash (https://unsplash.com/photos/cows-graze-in-a-green-pasture-with-calves-hcq6Nw5axIk)
+B005;Canela;Ganado;6;172.5;Dulce y tranquila: su lugar favorito es descansar al sol;canela.jpg;Joseph Corl · Unsplash (https://unsplash.com/photos/a-cute-calf-rests-in-the-grass-dAbY5BCLvgs)
+B006;Sol;Ganado;9;198.0;La primera en llegar al bebedero después de jugar;sol.jpg;Csaba Gyulavári · Unsplash (https://unsplash.com/photos/a-calf-drinks-water-from-a-trough-in-a-field-lRvhpEnrYwQ)
