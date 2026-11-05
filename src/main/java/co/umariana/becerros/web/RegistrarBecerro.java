@@ -1,5 +1,7 @@
 package co.umariana.becerros.web;
 
+import co.umariana.becerros.modelo.Becerro;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,13 +29,25 @@ public class RegistrarBecerro extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // TODO (SERVLETS)
-        throw new UnsupportedOperationException("TODO: RegistrarBecerro.doGet()");
+        req.getRequestDispatcher("/WEB-INF/vistas/formulario.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // TODO (SERVLETS)
-        throw new UnsupportedOperationException("TODO: RegistrarBecerro.doPost()");
+        try {
+            Becerro becerro = new Becerro(
+                    req.getParameter("codigo"),
+                    req.getParameter("titulo"),
+                    req.getParameter("categoria"),
+                    Integer.parseInt(req.getParameter("apetito")),
+                    Double.parseDouble(req.getParameter("peso")),
+                    req.getParameter("descripcion"),
+                    req.getParameter("archivo"));
+            Contexto.servicio().agregar(becerro);
+            resp.sendRedirect("listar");
+        } catch (IllegalArgumentException e) {
+            req.setAttribute("error", e.getMessage());
+            req.getRequestDispatcher("/WEB-INF/vistas/formulario.jsp").forward(req, resp);
+        }
     }
 }

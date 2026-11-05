@@ -24,7 +24,12 @@ public class ListarBecerros extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // TODO (SERVLETS)
-        throw new UnsupportedOperationException("TODO: ListarBecerros.doGet()");
+        if ("ranking".equals(req.getParameter("orden"))) {
+            req.setAttribute("becerros", Contexto.servicio().ranking());
+        } else {
+            req.setAttribute("becerros", Contexto.servicio().listar());
+        }
+        req.setAttribute("promedios", Contexto.servicio().promedioPorCategoria());
+        req.getRequestDispatcher("/WEB-INF/vistas/listar.jsp").forward(req, resp);
     }
 }

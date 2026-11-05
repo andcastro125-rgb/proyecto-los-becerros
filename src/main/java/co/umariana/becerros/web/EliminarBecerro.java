@@ -18,7 +18,7 @@ public class EliminarBecerro extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // TODO (SERVLETS)
-        throw new UnsupportedOperationException("TODO: EliminarBecerro.doPost()");
+        Contexto.servicio().eliminar(req.getParameter("codigo"));
+        resp.sendRedirect("listar");
     }
 }
